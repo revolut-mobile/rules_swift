@@ -89,6 +89,7 @@ load(
     "are_all_features_enabled",
     "get_cc_feature_configuration",
     "is_feature_enabled",
+    "warnings_as_errors_from_features",
 )
 load(":module_maps.bzl", "write_module_map")
 load(
@@ -363,6 +364,10 @@ def compile_action_configs(
                 SWIFT_FEATURE_SUPPORTS_LIBRARY_EVOLUTION,
                 SWIFT_FEATURE_EMIT_SWIFTINTERFACE,
             ],
+        ),
+        swift_toolchain_config.action_config(
+            actions = [swift_action_names.COMPILE],
+            configurators = [_warnings_as_errors_configurator],
         ),
 
         # Configure the path to the emitted *-Swift.h file.
@@ -1351,6 +1356,10 @@ def _emit_module_path_configurator(prerequisites, args):
 def _emit_module_interface_path_configurator(prerequisites, args):
     """Adds the `.swiftinterface` output path to the command line."""
     args.add("-emit-module-interface-path", prerequisites.swiftinterface_file)
+
+def _warnings_as_errors_configurator(prerequisites, args):
+    """Adds warnings as errors to the command line."""
+    args.add_all(prerequisites.warnings_as_errors, format_each = "-Xwrapped-swift=-warning-as-error=%s")
 
 def _emit_objc_header_path_configurator(prerequisites, args):
     """Adds the generated header output path to the command line."""
@@ -2513,6 +2522,10 @@ to use swift_common.compile(include_dev_srch_paths = ...) instead.\
 """)  # buildifier: disable=print
         include_dev_srch_paths_value = is_test
 
+    warnings_as_errors = warnings_as_errors_from_features(
+        feature_configuration = feature_configuration,
+    )
+
     prerequisites = struct(
         additional_inputs = additional_inputs,
         bin_dir = feature_configuration._bin_dir,
@@ -2535,6 +2548,7 @@ to use swift_common.compile(include_dev_srch_paths = ...) instead.\
         transitive_modules = transitive_modules,
         transitive_swiftmodules = transitive_swiftmodules,
         user_compile_flags = copts,
+        warnings_as_errors = warnings_as_errors,
         vfsoverlay_file = vfsoverlay_file,
         vfsoverlay_search_path = _SWIFTMODULES_VFS_ROOT,
         workspace_name = workspace_name,

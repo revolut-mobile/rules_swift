@@ -52,6 +52,7 @@ bzl_library(
         ":utils",
         ":vfsoverlay",
         "//swift/toolchains/config:compile_module_interface_config",
+        "//swift/toolchains/config:default_warnings_as_errors",
         "@bazel_skylib//lib:collections",
         "@bazel_skylib//lib:partial",
         "@bazel_skylib//lib:paths",
