@@ -367,7 +367,10 @@ def compile_action_configs(
         ),
         swift_toolchain_config.action_config(
             actions = [swift_action_names.COMPILE],
-            configurators = [_warnings_as_errors_configurator],
+            configurators = [
+                swift_toolchain_config.add_arg("-debug-diagnostic-names"),
+                _warnings_as_errors_configurator
+            ],
         ),
 
         # Configure the path to the emitted *-Swift.h file.

@@ -230,7 +230,7 @@ void WorkProcessor::ProcessWorkRequest(
 
   SwiftRunner swift_runner(processed_args, index_import_path_,
                            /*force_response_file=*/true);
-  int exit_code = swift_runner.Run(&stderr_stream, /*stdout_to_stderr=*/true);
+  int exit_code = swift_runner.Run(stderr_stream, /*stdout_to_stderr=*/true);
   if (exit_code != 0) {
     FinalizeWorkRequest(request, response, exit_code, stderr_stream);
     return;
