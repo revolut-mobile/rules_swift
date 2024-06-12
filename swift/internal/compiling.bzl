@@ -1361,7 +1361,7 @@ def _emit_module_interface_path_configurator(prerequisites, args):
     args.add("-emit-module-interface-path", prerequisites.swiftinterface_file)
 
 def _warnings_as_errors_configurator(prerequisites, args):
-    """Adds warnings as errors to the command line."""
+    """Adds flags to treat specific warnings as errors to the command line."""
     args.add_all(prerequisites.warnings_as_errors, format_each = "-Xwrapped-swift=-warning-as-error=%s")
 
 def _emit_objc_header_path_configurator(prerequisites, args):
