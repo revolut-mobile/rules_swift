@@ -472,34 +472,21 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
   // while the compiler doesn't give us a more proper way to detect these.
   std::regex const diagnostic_name_pattern{"\\[([_A-Za-z][_A-Za-z0-9]*)\\](;|$)"};
 
-  // std::ofstream file;
-  // file.open ("/Users/timofei.karpov/Developer/rules_swift/tools/worker/example.txt");
-  // file << "Writing this to a file.\n\n";
-
   std::istringstream error_stream(stderr_output);
   std::string line;    
   while (getline(error_stream, line, '\n')) {
-      // file << line << std::endl;
       std::unique_ptr<std::string> modified_line;
 
       std::smatch warning_matches;
-      if(std::regex_search(line, warning_matches, warning_pattern)) {
-        // file << "Found -> ";
-        // for (size_t i = 0; i < warning_matches.size(); ++i) {
-            // file << i << ": '" << warning_matches[i].str() << " ";
-        // }
-        // file << std::endl;
-
+      if (std::regex_search(line, warning_matches, warning_pattern)) {
         std::optional<std::string> ansi_sequence = warning_matches[2];
 
-        // file << "Diagnostic names -> ";
-
-        std::sregex_iterator diagnostic_names_begin = std::sregex_iterator(line.begin(), line.end(), diagnostic_name_pattern);
-        std::sregex_iterator diagnostic_names_end = std::sregex_iterator();
+        std::sregex_iterator diagnostic_names_begin(line.begin(), 
+                                                    line.end(), 
+                                                    diagnostic_name_pattern);
+        std::sregex_iterator diagnostic_names_end;
         for (std::sregex_iterator i = diagnostic_names_begin; i != diagnostic_names_end; ++i) {
           std::string diagnostic_name = (*i)[1].str();
-
-          // file << diagnostic_name << std::endl;
 
           if (warnings_as_errors_.find(diagnostic_name) == warnings_as_errors_.end()) {
             continue;
@@ -515,8 +502,6 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
 
           modified_line = std::make_unique<std::string>(modified_line_stream.str());
 
-          // file << "Modified -> " << modified_line_stream.str() << std::endl;
-
           if (exit_code == 0) {
             exit_code = 1;
           }
@@ -527,7 +512,6 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
           // line will become an error.
           break;
         }
-        // file << std::endl;
       }
 
       if (modified_line) {
@@ -536,6 +520,4 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
         stderr_stream << line << std::endl;
       }
   }
-  // file << "\nend";
-  // file.close();
 }
