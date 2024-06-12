@@ -67,12 +67,8 @@ load(
     "get_swift_executable_for_toolchain",
     "resolve_optional_tool",
 )
-# load(
-#     "@build_bazel_rules_swift//swift/toolchains/config:default_warnings_as_errors.bzl",
-#     "default_warnings_as_errors_features",
-# )
 load(
-    "//swift/toolchains/config:default_warnings_as_errors.bzl",
+    "@build_bazel_rules_swift//swift/toolchains/config:default_warnings_as_errors.bzl",
     "default_warnings_as_errors_features",
 )
 

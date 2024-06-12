@@ -116,12 +116,12 @@ SwiftRunner::SwiftRunner(const std::vector<std::string> &args,
   args_ = ProcessArguments(args);
 }
 
-int SwiftRunner::Run(std::ostream &stderr_stream, bool stdout_to_stderr) {
+int SwiftRunner::Run(std::ostream *stderr_stream, bool stdout_to_stderr) {
   std::ostringstream captured_stderr_stream;
   int exit_code = RunSubProcess(
       args_, &job_env_, &captured_stderr_stream, stdout_to_stderr);
 
-  ProcessDiagnostics(captured_stderr_stream.str(), stderr_stream, exit_code);
+  ProcessDiagnostics(captured_stderr_stream.str(), *stderr_stream, exit_code);
 
   if (exit_code != 0) {
     return exit_code;
@@ -143,13 +143,13 @@ int SwiftRunner::Run(std::ostream &stderr_stream, bool stdout_to_stderr) {
                          args_.begin() + initial_args_to_skip, args_.end());
 
     exit_code = RunSubProcess(
-        rewriter_args, /*env=*/nullptr, &stderr_stream, stdout_to_stderr);
+        rewriter_args, /*env=*/nullptr, stderr_stream, stdout_to_stderr);
   }
 
   auto enable_global_index_store = global_index_store_import_path_ != "";
   if (enable_global_index_store) {
     if (index_import_path_.empty()) {
-      (stderr_stream) << "Failed to find index-import path from runfiles\n";
+      (*stderr_stream) << "Failed to find index-import path from runfiles\n";
       return EXIT_FAILURE;
     }
 
@@ -182,7 +182,7 @@ int SwiftRunner::Run(std::ostream &stderr_stream, bool stdout_to_stderr) {
     ii_args.push_back((exec_root / global_index_store_import_path_).string());
     ii_args.push_back((exec_root / index_store_path_).string());
     exit_code = RunSubProcess(
-        ii_args, /*env=*/nullptr, &stderr_stream, /*stdout_to_stderr=*/true);
+        ii_args, /*env=*/nullptr, stderr_stream, /*stdout_to_stderr=*/true);
   }
   return exit_code;
 }
