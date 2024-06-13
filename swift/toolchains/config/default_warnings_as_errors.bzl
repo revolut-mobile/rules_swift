@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Manages the default list of warnings that are upgraded to warnings."""
+"""Manages the default list of warnings that are upgraded to errors."""
 
 visibility([
     "//swift/internal/...",

@@ -497,8 +497,9 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
           if (ansi_sequence.has_value()) {
             modified_line_stream << "\x1b[1;31m"; // red color
           }
-          modified_line_stream << "error: (from warning) ";
+          modified_line_stream << "error: ";
           modified_line_stream << warning_matches.suffix();
+          modified_line_stream << " (promoted_from_warning)";
 
           modified_line = std::make_unique<std::string>(modified_line_stream.str());
 
