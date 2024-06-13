@@ -67,6 +67,10 @@ load(
     "get_swift_executable_for_toolchain",
     "resolve_optional_tool",
 )
+load(
+    "@build_bazel_rules_swift//swift/toolchains/config:default_warnings_as_errors.bzl",
+    "default_warnings_as_errors_features",
+)
 
 # TODO: Remove once we drop bazel 7.x
 _OBJC_PROVIDER_LINKING = hasattr(apple_common.new_objc_provider(), "linkopt")
@@ -625,6 +629,7 @@ def _xcode_swift_toolchain_impl(ctx):
         SWIFT_FEATURE_USE_GLOBAL_MODULE_CACHE,
         SWIFT_FEATURE_USE_RESPONSE_FILES,
     ])
+    requested_features.extend(default_warnings_as_errors_features())
 
     # Xcode 14 implies Swift 5.7.
     if _is_xcode_at_least_version(xcode_config, "14.0"):
