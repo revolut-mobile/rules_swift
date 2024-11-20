@@ -236,6 +236,13 @@ def compile_action_configs(
             features = [SWIFT_FEATURE_EMIT_SWIFTINTERFACE],
         ),
         ActionConfigInfo(
+            actions = [SWIFT_ACTION_COMPILE],
+            configurators = [
+                add_arg("-debug-diagnostic-names"),
+                _warnings_as_errors_configurator,
+            ],
+        ),
+        ActionConfigInfo(
             actions = [
                 SWIFT_ACTION_COMPILE,
             ],
@@ -1505,6 +1512,10 @@ def _emit_module_path_configurator(prerequisites, args):
 def _emit_module_interface_path_configurator(prerequisites, args):
     """Adds the `.swiftinterface` output path to the command line."""
     args.add("-emit-module-interface-path", prerequisites.swiftinterface_file)
+
+def _warnings_as_errors_configurator(prerequisites, args):
+    """Adds flags to treat specific warnings as errors to the command line."""
+    args.add_all(prerequisites.warnings_as_errors, format_each = "-Xwrapped-swift=-warning-as-error=%s")
 
 def _emit_private_module_interface_path_configurator(prerequisites, args):
     """Adds the `.private.swiftinterface` output path to the command line."""
