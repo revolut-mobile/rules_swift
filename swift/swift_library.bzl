@@ -59,7 +59,7 @@ load(
     "include_developer_search_paths",
 )
 load(":module_name.bzl", "derive_swift_module_name")
-load(":providers.bzl", "SwiftInfo")
+load(":providers.bzl", "SwiftInfo", "SwiftWerrorConfiguration")
 load(":swift_clang_module_aspect.bzl", "swift_clang_module_aspect")
 
 def _maybe_parse_as_library_copts(srcs):
@@ -187,6 +187,9 @@ def _swift_library_impl(ctx):
 
     include_dev_srch_paths = include_developer_search_paths(ctx.attr)
 
+    werror_configuration = ctx.attr.werror_configuration[SwiftWerrorConfiguration] if ctx.attr.werror_configuration else None
+    print(werror_configuration)
+
     compile_result = compile(
         actions = ctx.actions,
         additional_inputs = additional_inputs,
@@ -207,6 +210,7 @@ def _swift_library_impl(ctx):
         swift_toolchain = swift_toolchain,
         target_name = ctx.label.name,
         workspace_name = ctx.workspace_name,
+        werror_configuration = werror_configuration,
     )
 
     module_context = compile_result.module_context

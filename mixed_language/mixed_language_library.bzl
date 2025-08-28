@@ -55,6 +55,7 @@ def mixed_language_library(
         swift_defines = [],
         swift_srcs,
         swiftc_inputs = [],
+        swift_werror_configuration = None,
         textual_hdrs = [],
         umbrella_header = None,
         weak_sdk_frameworks = [],
@@ -317,6 +318,7 @@ a mixed language Swift library, use a clang only library rule like \
         # for `swift_library`, but is a breaking change
         generated_header_name = module_name + "-Swift.h",
         linkopts = linkopts,
+        werror_configuration = swift_werror_configuration,
         module_name = module_name,
         package_name = package_name,
         private_deps = private_deps,
