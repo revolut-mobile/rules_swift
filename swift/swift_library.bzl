@@ -188,7 +188,6 @@ def _swift_library_impl(ctx):
     include_dev_srch_paths = include_developer_search_paths(ctx.attr)
 
     werror_configuration = ctx.attr.werror_configuration[SwiftWerrorConfiguration] if ctx.attr.werror_configuration else None
-    print(werror_configuration)
 
     compile_result = compile(
         actions = ctx.actions,

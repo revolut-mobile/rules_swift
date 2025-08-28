@@ -1389,11 +1389,13 @@ def _werror_configurator(prerequisites, args):
     """Adds flags to treat specific warnings as errors to the command line."""
     args.add_all(prerequisites.werror_configuration.ids, format_each = "-Xwrapped-swift=-werror-id=%s")
     args.add_all(prerequisites.werror_configuration.no_id_patterns, format_each = "-Xwrapped-swift=-werror-no-id-pattern=\"%s\"")
-    for key, patterns in prerequisites.werror_configuration.id_with_patterns.items():
-        args.add_all(
-            patterns,
-            format_each = "-Xwrapped-swift=-werror-id-pattern.%s=\"%%s\"" % key,
-        )
+    id_with_patterns = prerequisites.werror_configuration.id_with_patterns
+    if id_with_patterns:
+        for key, patterns in id_with_patterns.items():
+            args.add_all(
+                patterns,
+                format_each = "-Xwrapped-swift=-werror-id-pattern.%s=\"%%s\"" % key,
+            )
 
 def _emit_private_module_interface_path_configurator(prerequisites, args):
     """Adds the `.private.swiftinterface` output path to the command line."""
