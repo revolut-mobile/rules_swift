@@ -498,8 +498,6 @@ void SwiftRunner::ProcessDiagnostics(std::string stderr_output,
     return;
   }
 
-  std::ofstream log("/Users/timofei.karpov/Developer/TimofeiKarpov/rules_swift/file.log", std::ios::trunc);
-
   // Match the "warning: " prefix on a message, also capturing the preceding
   // ANSI color sequence if present.
   std::regex const warning_pattern{"((\\x1b\\[(?:\\d+)(?:;\\d+)*m)?warning:\\s)"};
