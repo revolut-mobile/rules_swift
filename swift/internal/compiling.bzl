@@ -639,7 +639,7 @@ to use swift_common.compile(include_dev_srch_paths = ...) instead.\
 
     werror_configuration = werror_configuration or SwiftWerrorConfiguration(
         ids = [],
-        id_with_patterns = [],
+        id_with_patterns = {},
         no_id_patterns = []
     )
 
