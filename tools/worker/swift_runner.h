@@ -185,9 +185,13 @@ class SwiftRunner {
   // index outputs into the `index_store_path` to integrate outputs with Bazel.
   std::string global_index_store_import_path_;
 
-  // A set containing the diagnostic IDs that should be upgraded from warnings
-  // to errors by the worker.
-  std::set<std::string> warnings_as_errors_;
+  // A map containing patterns for warning with corresponding diagnostic ids 
+  // that should be upgraded to errors by the worker.
+  std::map<std::string, std::set<std::string>> warnings_as_errors_patterns_;
+
+  // A set containing patterns for warnings without diagnostic id that should be 
+  // upgraded to errors by the worker.
+  std::set<std::string> no_id_warnings_as_errors_patterns_;
 };
 
 #endif  // BUILD_BAZEL_RULES_SWIFT_TOOLS_WORKER_SWIFT_RUNNER_H_

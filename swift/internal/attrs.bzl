@@ -15,7 +15,7 @@
 """Common attributes used by multiple Swift build rules."""
 
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
-load("//swift:providers.bzl", "SwiftInfo")
+load("//swift:providers.bzl", "SwiftInfo", "SwiftWerrorConfiguration")
 load(":providers.bzl", "SwiftCompilerPluginInfo")
 
 def swift_common_rule_attrs(
@@ -361,6 +361,12 @@ the consuming module that the objects will be locally available (which may
 potentially avoid a PLT relocation).  Set to `False` to build a `.so` or `.dll`.
 """,
                 mandatory = False,
+            ),
+            "werror_configuration": attr.label(
+                doc = """\
+Contains configuration for promoting specific warnings to errors.
+""",
+                providers = [SwiftWerrorConfiguration],
             ),
         },
     )

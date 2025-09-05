@@ -19,6 +19,7 @@ load("@bazel_skylib//lib:sets.bzl", "sets")
 load(
     "//swift:providers.bzl",
     "SwiftInfo",
+    "SwiftWerrorConfiguration",
     "create_clang_module_inputs",
     "create_swift_module_context",
     "create_swift_module_inputs",
@@ -64,7 +65,6 @@ load(
     "get_cc_feature_configuration",
     "is_feature_enabled",
     "upcoming_and_experimental_features",
-    "warnings_as_errors_from_features",
 )
 load(":module_maps.bzl", "write_module_map")
 load(
@@ -324,7 +324,8 @@ def compile(
         swift_infos,
         swift_toolchain,
         target_name,
-        workspace_name):
+        workspace_name,
+        werror_configuration = None):
     """Compiles a Swift module.
 
     Args:
@@ -636,8 +637,10 @@ to use swift_common.compile(include_dev_srch_paths = ...) instead.\
         feature_configuration = feature_configuration,
     )
 
-    warnings_as_errors = warnings_as_errors_from_features(
-        feature_configuration = feature_configuration,
+    werror_configuration = werror_configuration or SwiftWerrorConfiguration(
+        ids = [],
+        id_with_patterns = {},
+        no_id_patterns = []
     )
 
     prerequisites = struct(
@@ -668,7 +671,7 @@ to use swift_common.compile(include_dev_srch_paths = ...) instead.\
         transitive_swiftmodules = transitive_swiftmodules,
         upcoming_features = upcoming_features,
         user_compile_flags = copts,
-        warnings_as_errors = warnings_as_errors,
+        werror_configuration = werror_configuration,
         vfsoverlay_file = vfsoverlay_file,
         vfsoverlay_search_path = _SWIFTMODULES_VFS_ROOT,
         workspace_name = workspace_name,
