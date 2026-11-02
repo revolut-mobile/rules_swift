@@ -16,7 +16,7 @@
 
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@rules_cc//cc/common:cc_info.bzl", "CcInfo")
-load("//swift:providers.bzl", "SwiftInfo", "SwiftToolsInfo")
+load("//swift:providers.bzl", "SwiftInfo", "SwiftToolsInfo", "SwiftWerrorConfiguration")
 load(":providers.bzl", "SwiftCompilerPluginInfo")
 
 C_HEADER_EXTENSIONS = ["h", "hh", "hpp", "hxx", "inc"]
@@ -424,6 +424,12 @@ the consuming module that the objects will be locally available (which may
 potentially avoid a PLT relocation).  Set to `False` to build a `.so` or `.dll`.
 """,
                 mandatory = False,
+            ),
+            "werror_configuration": attr.label(
+                doc = """\
+Contains configuration for promoting specific warnings to errors.
+""",
+                providers = [SwiftWerrorConfiguration],
             ),
         },
     )
